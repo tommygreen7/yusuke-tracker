@@ -7,21 +7,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0e1628;
-  --surface: #151d35;
-  --surface2: #1c2640;
-  --border: #2a3558;
-  --text: #e8edf8;
-  --muted: #5a6a99;
-  --dim: #2e3d66;
-  --eng: #38bdf8;
-  --mas: #fb923c;
-  --sci: #a78bfa;
-  --gold: #fbbf24;
-  --green: #4ade80;
-  --green-bg: #052010;
-  --weekend: #ff6b9d;
-  --weekend-bg: #2a0f1a;
+  --bg: #f0f4ff;
+  --surface: #ffffff;
+  --surface2: #e8edf8;
+  --border: #9aaac8;
+  --text: #1a2340;
+  --muted: #6b7899;
+  --dim: #b0bcd8;
+  --eng: #0284c7;
+  --mas: #ea6c00;
+  --sci: #7c3aed;
+  --gold: #d97706;
+  --green: #16a34a;
+  --green-bg: #dcfce7;
+  --weekend: #db2777;
+  --weekend-bg: #fce7f3;
   --cell: 44px;
   --date-w: 120px;
 }
@@ -34,19 +34,22 @@ body {
 body::before {
   content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
   background:
-    radial-gradient(ellipse 70% 40% at 15% 5%, rgba(56,189,248,.07) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(167,139,250,.07) 0%, transparent 60%);
+    radial-gradient(ellipse 70% 40% at 15% 5%, rgba(56,189,248,.05) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(124,58,237,.05) 0%, transparent 60%);
 }
 .app { position:relative; z-index:1; display:flex; flex-direction:column; min-height:100vh; }
 
 /* ── HEADER ── */
 .header {
   padding: 14px 20px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1.5px solid var(--border);
   background: var(--surface);
+  position: sticky; top: 0; z-index: 100;
+}
+.header-inner {
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 10px;
-  position: sticky; top: 0; z-index: 100;
+  max-width: 1400px; margin: 0 auto;
 }
 .header-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .title {
@@ -56,10 +59,10 @@ body::before {
 }
 .point-box {
   display: flex; align-items: center; gap: 8px;
-  background: linear-gradient(135deg, #251a00, #3d2c00);
+  background: linear-gradient(135deg, #fef9e7, #fef3c7);
   border: 1.5px solid var(--gold); border-radius: 12px;
   padding: 7px 14px;
-  box-shadow: 0 0 18px rgba(251,191,36,.18);
+  box-shadow: 0 0 18px rgba(217,119,6,.15);
 }
 .point-val {
   font-family: 'Fredoka One', cursive; font-size: 28px;
@@ -73,9 +76,9 @@ body::before {
   padding: 8px 14px; transition: all .16s;
   display: inline-flex; align-items: center; gap: 5px;
 }
-.btn-green { background: var(--green); color: #032010; box-shadow: 0 2px 10px rgba(74,222,128,.3); }
+.btn-green { background: var(--green); color: #052e16; box-shadow: 0 2px 10px rgba(74,222,128,.3); }
 .btn-green:hover { background: #6ee7a0; transform: translateY(-1px); }
-.btn-ghost { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+.btn-ghost { background: var(--surface2); color: var(--muted); border: 1.5px solid var(--border); }
 .btn-ghost:hover { color: var(--text); }
 .btn-red { background: transparent; color: #f87171; border: 1px solid rgba(248,113,113,.25); }
 .btn-red:hover { background: rgba(248,113,113,.08); }
@@ -84,11 +87,14 @@ body::before {
 
 /* ── LEGEND ── */
 .legend {
-  display: flex; align-items: center; gap: 16px;
   padding: 10px 20px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1.5px solid var(--border);
   background: var(--surface);
+}
+.legend-inner {
+  display: flex; align-items: center; gap: 16px;
   flex-wrap: wrap;
+  max-width: 1400px; margin: 0 auto;
 }
 .legend-item {
   display: flex; align-items: center; gap: 6px;
@@ -101,10 +107,11 @@ body::before {
 
 /* ── MAIN ── */
 .main { padding: 20px; flex: 1; }
+.main-inner { max-width: 1400px; margin: 0 auto; }
 
 /* ── TABLE ── */
 .table-wrap {
-  border-radius: 12px; border: 1px solid var(--border);
+  border-radius: 12px; border: 1.5px solid var(--border);
   overflow-x: auto;
   max-height: calc(100vh - 160px);
   overflow-y: auto;
@@ -114,54 +121,55 @@ table { border-collapse: collapse; min-width: max-content; }
 /* Header rows — sticky on vertical scroll */
 thead tr:first-child th {
   background: var(--surface2);
+  color: var(--text);
   font-size: 12px; font-weight: 800;
   letter-spacing: 0.5px;
   padding: 10px 6px; text-align: center;
-  border-bottom: 1px solid var(--border);
-  border-right: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 15;
+  border-bottom: 1.5px solid var(--border);
+  border-right: 1.5px solid var(--border);
+  position: sticky; top: 0; z-index: 30;
 }
 thead tr:nth-child(2) th {
-  background: #111929;
+  background: #e0e6f5;
   font-size: 10px; font-weight: 700;
   color: var(--muted); letter-spacing: 0.8px;
   text-transform: uppercase;
   padding: 6px 4px; text-align: center;
   border-bottom: 2px solid var(--border);
-  border-right: 1px solid var(--border);
+  border-right: 1.5px solid var(--border);
   white-space: nowrap;
-  position: sticky; top: 41px; z-index: 15;
+  position: sticky; top: 41px; z-index: 30;
 }
 th.date-col {
   width: var(--date-w); min-width: var(--date-w);
   text-align: left !important;
   padding-left: 14px !important;
-  position: sticky; left: 0; top: 0; z-index: 25;
+  position: sticky; left: 0; top: 0; z-index: 35;
   background: var(--surface2) !important;
 }
 th.date-col2 {
-  position: sticky; left: 0; top: 41px; z-index: 25;
-  background: #111929 !important;
+  position: sticky; left: 0; top: 41px; z-index: 35;
+  background: #e0e6f5 !important;
   padding-left: 14px !important;
   text-align: left !important;
 }
 th.pts-col {
   width: 64px; min-width: 64px;
-  position: sticky; right: 0; top: 0; z-index: 25;
+  position: sticky; right: 0; top: 0; z-index: 35;
   background: var(--surface2) !important;
   border-left: 2px solid var(--border) !important;
 }
 th.pts-col2 {
-  position: sticky; right: 0; top: 41px; z-index: 25;
-  background: #111929 !important;
+  position: sticky; right: 0; top: 41px; z-index: 35;
+  background: #e0e6f5 !important;
   border-left: 2px solid var(--border) !important;
 }
 th.grp-sep { width: 5px; min-width: 5px; background: var(--bg); border: none; padding: 0; }
 
 /* cells */
 td {
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  border-right: 1.5px solid var(--border);
+  border-bottom: 1.5px solid var(--border);
   height: var(--cell);
 }
 td.date-cell {
@@ -195,10 +203,10 @@ tr:hover .date-del { opacity: 0.5; }
 .date-del:hover { opacity: 1 !important; }
 
 /* weekend row tint */
-tr.weekend-row td.date-cell { background: #160d17; }
-tr.weekend-row:hover td.date-cell { background: #1c0f1f; }
-tr.weekend-row { background: rgba(255,107,157,.03); }
-tr.weekend-row:hover { background: rgba(255,107,157,.06); }
+tr.weekend-row td.date-cell { background: #fdf2f8; }
+tr.weekend-row:hover td.date-cell { background: #fce7f3; }
+tr.weekend-row { background: rgba(219,39,119,.04); }
+tr.weekend-row:hover { background: rgba(219,39,119,.08); }
 
 /* check cell */
 td.check-cell {
@@ -212,9 +220,9 @@ td.check-cell {
 }
 .ck:hover { background: rgba(255,255,255,.05); }
 .ck.on { background: var(--green-bg); }
-.ck.on:hover { background: #072816; }
+.ck.on:hover { background: #dcfce7; }
 .ck.on-weekend { background: var(--weekend-bg); }
-.ck.on-weekend:hover { background: #350d1f; }
+.ck.on-weekend:hover { background: #fce7f3; }
 .ck-box {
   width: 22px; height: 22px; border-radius: 6px;
   border: 2px solid var(--border);
@@ -222,7 +230,7 @@ td.check-cell {
   font-size: 13px; transition: all .17s;
 }
 .ck:hover .ck-box { border-color: var(--muted); }
-.ck.on .ck-box { background: var(--green); border-color: var(--green); color: #032010; }
+.ck.on .ck-box { background: var(--green); border-color: var(--green); color: #052e16; }
 .ck.on-weekend .ck-box { background: var(--weekend); border-color: var(--weekend); color: #1a0009; }
 
 /* group separators */
@@ -236,9 +244,9 @@ td.pts-cell {
   text-align: center; padding: 0 8px;
   border-left: 2px solid var(--border) !important;
 }
-tr.weekend-row td.pts-cell { background: #160d17; }
+tr.weekend-row td.pts-cell { background: #fdf2f8; }
 tr:hover td.pts-cell { background: #1c2440; }
-tr.weekend-row:hover td.pts-cell { background: #1c0f1f; }
+tr.weekend-row:hover td.pts-cell { background: #fce7f3; }
 .pts-num {
   font-family: 'Fredoka One', cursive;
   font-size: 18px; line-height: 1;
@@ -274,9 +282,9 @@ tr.add-row td {
 
 /* ── WEEK SUMMARY ROW ── */
 tr.week-header td {
-  background: #0a0f1e;
+  background: #e8edf8;
   border-top: 2px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1.5px solid var(--border);
   padding: 0;
 }
 .week-summary-cell {
@@ -303,11 +311,11 @@ tr.week-header td {
   font-family: 'Fredoka One', cursive;
   font-size: 16px; line-height: 1;
 }
-.week-stat.weekday { background: rgba(74,222,128,.08); }
+.week-stat.weekday { background: rgba(22,163,74,.1); }
 .week-stat.weekday .week-stat-val { color: var(--green); }
-.week-stat.bonus { background: rgba(255,107,157,.08); }
+.week-stat.bonus { background: rgba(219,39,119,.08); }
 .week-stat.bonus .week-stat-val { color: var(--weekend); }
-.week-stat.total { background: rgba(251,191,36,.12); }
+.week-stat.total { background: rgba(217,119,6,.1); }
 .week-stat.total .week-stat-val { color: var(--gold); font-size: 18px; }
 tr.week-first-row td { border-top: 2px solid var(--border); }
 
@@ -331,7 +339,7 @@ tr.week-first-row td { border-top: 2px solid var(--border); }
 .norma-row textarea {
   flex: 1;
   font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 500;
-  background: var(--surface2); border: 1px solid var(--border);
+  background: var(--surface2); border: 1.5px solid var(--border);
   color: var(--text); border-radius: 8px; padding: 8px 10px;
   outline: none; resize: vertical; min-height: 52px;
   line-height: 1.5; transition: border .16s;
@@ -349,17 +357,17 @@ th.has-norma::after {
 
 /* norma popup */
 .norma-popup {
-  position: fixed; z-index: 300;
+  position: fixed; z-index: 9000;
   background: var(--surface);
-  border: 1px solid var(--gold);
+  border: 2px solid var(--gold);
   border-radius: 12px;
   padding: 14px 16px;
-  max-width: 280px; min-width: 180px;
-  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  max-width: 300px; min-width: 200px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.2);
   font-size: 13px; line-height: 1.6;
   color: var(--text);
   pointer-events: none;
-  opacity: 0; transition: opacity .15s;
+  opacity: 0; transition: opacity .2s;
 }
 .norma-popup.show { opacity: 1; }
 .norma-popup-title {
@@ -371,11 +379,11 @@ th.has-norma::after {
 /* ── CHARACTER EVOLUTION ── */
 .char-box {
   display: flex; align-items: center; gap: 10px;
-  background: linear-gradient(135deg, #0d1f3c, #1a2d50);
-  border: 1.5px solid #2a4a7f;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border: 1.5px solid #93c5fd;
   border-radius: 14px; padding: 8px 14px;
   min-width: 200px;
-  box-shadow: 0 0 20px rgba(56,189,248,.1);
+  box-shadow: 0 0 20px rgba(2,132,199,.1);
   position: relative; overflow: hidden;
 }
 .char-box::before {
@@ -403,7 +411,7 @@ th.has-norma::after {
   color: var(--gold); letter-spacing: 0.5px;
 }
 .char-xp-bar {
-  height: 4px; background: #1a2d50;
+  height: 4px; background: #dbeafe;
   border-radius: 99px; margin-top: 4px; overflow: hidden;
 }
 .char-xp-fill {
@@ -414,7 +422,7 @@ th.has-norma::after {
 .char-evolve {
   position: fixed; inset: 0; z-index: 500;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(0,0,0,.85); backdrop-filter: blur(8px);
+  background: rgba(255,255,255,.92); backdrop-filter: blur(8px);
   opacity: 0; pointer-events: none; transition: opacity .3s;
 }
 .char-evolve.show { opacity: 1; pointer-events: all; }
@@ -434,25 +442,53 @@ th.has-norma::after {
 .char-evolve-title {
   font-family: 'Fredoka One', cursive; font-size: 28px;
   color: var(--gold); margin-bottom: 8px;
-  text-shadow: 0 0 20px rgba(251,191,36,.5);
+  text-shadow: 0 0 20px rgba(217,119,6,.3);
 }
 .char-evolve-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+
+
+/* ── ZEBRA COLUMN COLORS BY SUBJECT ── */
+/* English cols: light blue - td only, th uses thead !important override */
+td.col-eng { background-color: rgba(2,132,199,.07) !important; }
+tr:hover td.col-eng { background-color: rgba(2,132,199,.13) !important; }
+td.col-eng.on { background-color: rgba(2,132,199,.15) !important; }
+
+/* Maths cols: light orange */
+td.col-mas { background-color: rgba(234,108,0,.07) !important; }
+tr:hover td.col-mas { background-color: rgba(234,108,0,.13) !important; }
+td.col-mas.on { background-color: rgba(234,108,0,.15) !important; }
+
+/* Science cols: light purple */
+td.col-sci { background-color: rgba(124,58,237,.07) !important; }
+tr:hover td.col-sci { background-color: rgba(124,58,237,.13) !important; }
+td.col-sci.on { background-color: rgba(124,58,237,.15) !important; }
+
+/* Japanese cols: light green */
+td.col-jpn { background-color: rgba(22,163,74,.07) !important; }
+tr:hover td.col-jpn { background-color: rgba(22,163,74,.13) !important; }
+td.col-jpn.on { background-color: rgba(22,163,74,.15) !important; }
+
+/* weekend override - blend with subject color */
+tr.weekend-row td.col-eng { background-color: rgba(2,132,199,.05) !important; }
+tr.weekend-row td.col-mas { background-color: rgba(234,108,0,.05) !important; }
+tr.weekend-row td.col-sci { background-color: rgba(124,58,237,.05) !important; }
+tr.weekend-row td.col-jpn { background-color: rgba(22,163,74,.05) !important; }
 
 /* ── MODAL ── */
 .overlay {
   position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,.75);
+  background: rgba(0,0,0,.6);
   display: none; align-items: center; justify-content: center;
   padding: 20px; backdrop-filter: blur(6px);
 }
 .overlay.open { display: flex; }
 .modal {
-  background: var(--surface); border: 1px solid var(--border);
+  background: var(--surface); border: 1.5px solid var(--border);
   border-radius: 16px; padding: 26px;
   width: 100%; max-width: 420px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 24px 60px rgba(0,0,0,.55);
+  box-shadow: 0 24px 60px rgba(0,0,0,.4);
 }
 .modal h2 {
   font-family: 'Fredoka One', cursive; font-size: 20px;
@@ -467,7 +503,7 @@ th.has-norma::after {
 .field input, .field select {
   width: 100%;
   font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600;
-  background: var(--surface2); border: 1px solid var(--border);
+  background: var(--surface2); border: 1.5px solid var(--border);
   color: var(--text); border-radius: 8px; padding: 9px 12px;
   outline: none; transition: border .16s;
 }
@@ -478,7 +514,7 @@ th.has-norma::after {
 .pt-row {
   display: flex; align-items: center; gap: 8px;
   padding: 8px 12px;
-  background: var(--surface2); border: 1px solid var(--border);
+  background: var(--surface2); border: 1.5px solid var(--border);
   border-radius: 8px; margin-bottom: 8px;
 }
 .pt-row-label {
@@ -489,14 +525,14 @@ th.has-norma::after {
 .pt-row input {
   width: 60px; text-align: center;
   font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700;
-  background: var(--bg); border: 1px solid var(--border);
+  background: var(--bg); border: 1.5px solid var(--border);
   color: var(--text); border-radius: 6px; padding: 5px 8px; outline: none;
 }
 .pt-row input:focus { border-color: var(--gold); }
 .pt-row span { font-size: 11px; color: var(--muted); font-weight: 700; }
 .weekend-note {
   margin-top: 14px; padding: 10px 12px;
-  background: rgba(255,107,157,.08); border: 1px solid rgba(255,107,157,.2);
+  background: rgba(219,39,119,.08); border: 1px solid rgba(255,107,157,.2);
   border-radius: 8px; font-size: 12px; color: var(--weekend);
   font-weight: 600; line-height: 1.5;
 }
@@ -523,9 +559,10 @@ th.has-norma::after {
 
 <!-- HEADER -->
 <div class="header">
+  <div class="header-inner">
   <div class="header-left">
     <div class="title">⚡ Yusuke Tracker</div>
-    <div id="sync-status" style="font-size:11px;font-weight:700;color:var(--muted)">🔄 読込中...</div>
+    <div id="sync-status" style="font-size:11px;font-weight:700;color:var(--muted)">🔄 Loading...</div>
     <div class="char-box">
       <div class="char-ascii" id="char-ascii"></div>
       <div class="char-info">
@@ -536,40 +573,45 @@ th.has-norma::after {
     </div>
   </div>
   <div class="header-right">
-    <button class="btn btn-green" onclick="openAddModal()">＋ 日付を追加</button>
-    <button class="btn btn-ghost" onclick="openSettings()">⚙️ ポイント設定</button>
-    <button class="btn btn-norma" onclick="openNormaModal()">🎯 ミッション設定</button>
+    <button class="btn btn-green" onclick="openAddModal()">＋ Add Date</button>
+    <button class="btn btn-ghost" onclick="openSettings()">⚙️ Points</button>
+    <button class="btn btn-norma" onclick="openNormaModal()">🎯 Missions</button>
   </div>
+  </div><!-- end header-inner -->
 </div>
 
 <!-- LEGEND -->
 <div class="legend">
+  <div class="legend-inner">
   <div class="legend-item">
-    <div class="legend-dot" style="background:var(--eng)"></div>英語
+    <div class="legend-dot" style="background:var(--eng)"></div>English
   </div>
   <div class="legend-item">
-    <div class="legend-dot" style="background:var(--mas)"></div>マス
+    <div class="legend-dot" style="background:var(--mas)"></div>Maths
   </div>
   <div class="legend-item">
-    <div class="legend-dot" style="background:var(--sci)"></div>サイエンス
+    <div class="legend-dot" style="background:var(--sci)"></div>Science
   </div>
   <div class="legend-sep">|</div>
   <div class="legend-item" style="color:var(--muted)">
-    月〜金：<span style="color:var(--green);margin-left:3px">ミッション</span>
+    Mon-Fri：<span style="color:var(--green);margin-left:3px">Mission</span>
   </div>
   <div class="legend-item" style="color:var(--muted)">
-    土・日：<span style="color:var(--weekend);margin-left:3px">ボーナス✨</span>
+    Sat/Sun：<span style="color:var(--weekend);margin-left:3px">Bonus✨</span>
   </div>
+  </div><!-- end legend-inner -->
 </div>
 
 <!-- MAIN TABLE -->
 <div class="main">
+  <div class="main-inner">
   <div class="table-wrap">
     <table id="main-table">
       <thead id="t-head"></thead>
       <tbody id="t-body"></tbody>
     </table>
   </div>
+  </div><!-- end main-inner -->
 </div>
 
 </div>
@@ -604,7 +646,7 @@ th.has-norma::after {
 <!-- NORMA MODAL -->
 <div class="overlay" id="modal-norma">
   <div class="modal" style="max-width:520px">
-    <h2>🎯 ミッション設定</h2>
+    <h2>🎯 Missions</h2>
     <p style="font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.6">
       各サブ科目のミッション内容を自由に記入してください。
     </p>
@@ -619,7 +661,7 @@ th.has-norma::after {
 <!-- SETTINGS MODAL -->
 <div class="overlay" id="modal-settings">
   <div class="modal">
-    <h2>⚙️ ポイント設定</h2>
+    <h2>⚙️ Points</h2>
     <div id="pt-rows"></div>
     <div class="weekend-note">
       🎉 土・日のチェックはボーナス扱い。<br>ポイントは同じ設定値が加算されます。
@@ -634,10 +676,10 @@ th.has-norma::after {
 <script>
 // ── CONFIG ──
 const SUBJECTS = [
-  { key: 'eng', label: '英語', subs: ['A','B','C'], color: '#38bdf8' },
-  { key: 'mas', label: 'マス', subs: ['A','B','C'], color: '#fb923c' },
-  { key: 'sci', label: 'サイエンス', subs: ['A','B','C'], color: '#a78bfa' },
-  { key: 'jpn', label: '日本語', subs: ['A','B','C'], color: '#34d399' },
+  { key: 'eng', label: 'English', subs: ['A','B','C'], color: '#38bdf8' },
+  { key: 'mas', label: 'Maths', subs: ['A','B','C'], color: '#fb923c' },
+  { key: 'sci', label: 'Science', subs: ['A','B','C'], color: '#a78bfa' },
+  { key: 'jpn', label: 'Japanese', subs: ['A','B','C'], color: '#34d399' },
 ];
 
 const DAYS_JP = ['日','月','火','水','木','金','土'];
@@ -662,10 +704,10 @@ let S = defaultState();
 function setSyncStatus(status) {
   const el = document.getElementById('sync-status');
   if (!el) return;
-  if (status === 'saving')  { el.textContent = '💾 保存中...'; el.style.color = 'var(--muted)'; }
-  if (status === 'saved')   { el.textContent = '✅ 保存済み'; el.style.color = 'var(--green)'; }
-  if (status === 'error')   { el.textContent = '⚠️ 保存失敗'; el.style.color = '#f87171'; }
-  if (status === 'loading') { el.textContent = '🔄 読込中...'; el.style.color = 'var(--muted)'; }
+  if (status === 'saving')  { el.textContent = '💾 Saving...'; el.style.color = 'var(--muted)'; }
+  if (status === 'saved')   { el.textContent = '✅ Saved'; el.style.color = 'var(--green)'; }
+  if (status === 'error')   { el.textContent = '⚠️ Save failed'; el.style.color = '#f87171'; }
+  if (status === 'loading') { el.textContent = '🔄 Loading...'; el.style.color = 'var(--muted)'; }
 }
 
 // ── SAVE to GAS ──
@@ -874,15 +916,34 @@ function renderTable() {
 
   // ── HEADER ROW 1: group labels ──
   let h1 = '<tr>';
-  h1 += `<th class="date-col" rowspan="2">日付</th>`;
+  h1 += `<th class="date-col" rowspan="2">Date</th>`;
   SUBJECTS.forEach((s, si) => {
     if (si > 0) h1 += `<th class="grp-sep" rowspan="2" style="background:var(--bg)"></th>`;
     const ptVals = s.subs.map(sub => getPoint(s.key, sub));
     const ptMin = Math.min(...ptVals), ptMax = Math.max(...ptVals);
     const ptLabel = ptMin === ptMax ? ptMin + 'pt' : ptMin + '-' + ptMax + 'pt';
-    h1 += `<th colspan="${s.subs.length}" style="color:${s.color};border-bottom:2px solid ${s.color}33">
-      ${s.label}
-      <span style="font-size:10px;opacity:.6;margin-left:4px">${ptLabel}</span>
+    h1 += `<th colspan="${s.subs.length}" class="col-${s.key}" style="
+      background: #1e2535 !important;
+      color: #ffffff !important;
+      border-bottom: 3px solid ${s.color};
+      border-top: 1px solid #1e2535;
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: .5px;
+      text-shadow: none;
+      padding: 10px 6px;
+    ">
+      <span style="
+        display:inline-block;
+        padding: 2px 10px;
+        border-radius: 6px;
+        background: ${s.color};
+        color: #fff;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: .4px;
+      ">${s.label}</span>
+      <span style="font-size:10px;font-weight:700;color:rgba(255,255,255,.6);margin-left:4px">${ptLabel}</span>
     </th>`;
   });
   h1 += `<th class="pts-col" rowspan="2" style="color:var(--gold)">⭐<br><span style="font-size:9px;font-weight:700;color:var(--muted)">PT</span></th>`;
@@ -895,10 +956,17 @@ function renderTable() {
       const pt = getPoint(s.key, sub);
       const hasNorma = S.norma && S.norma[s.key + '_' + sub];
       const normaClass = hasNorma ? ' has-norma' : '';
-      h2 += `<th class="${normaClass}" style="color:${s.color};opacity:.8;cursor:${hasNorma?'pointer':'default'}"
+      h2 += `<th class="col-${s.key} ${normaClass}" style="
+          background: #2d3548 !important;
+          color: #ffffff !important;
+          font-weight: 800;
+          font-size: 12px;
+          border-bottom: 2px solid ${s.color};
+          cursor:${hasNorma?'pointer':'default'}"
+        onclick="toggleNormaHint(event,'${s.key}','${sub}','${s.label}','${s.color}')"
         onmouseenter="showNormaHint(event,'${s.key}','${sub}','${s.label}','${s.color}')"
         onmouseleave="hideNormaHint()"
-      >${sub}<br><span style="font-size:9px;opacity:.6">${pt}pt</span></th>`;
+      >${sub}${hasNorma ? ' 📌' : ''}<br><span style="font-size:9px;font-weight:700;color:${s.color}">${pt}pt</span></th>`;
     });
   });
   h2 += '</tr>';
@@ -907,7 +975,7 @@ function renderTable() {
   // ── BODY ──
   if (S.dates.length === 0) {
     tbody.innerHTML = `<tr class="empty-row"><td colspan="20">
-      ＋ 日付を追加して記録をスタートしよう！
+      ＋ Add Dateして記録をスタートしよう！
     </td></tr>`;
     return;
   }
@@ -955,17 +1023,17 @@ function renderTable() {
         <div class="week-summary-cell">
           <div class="week-label">${wkLabel}</div>
           <div class="week-stat weekday">
-            <span class="week-stat-label">月〜金</span>
+            <span class="week-stat-label">Mon-Fri</span>
             <span class="week-stat-val">${weekdayPts}</span>
             <span class="week-stat-label">pt</span>
           </div>
           <div class="week-stat bonus">
-            <span class="week-stat-label">土日</span>
+            <span class="week-stat-label">Sat/Sun</span>
             <span class="week-stat-val">${bonusPts}</span>
             <span class="week-stat-label">pt</span>
           </div>
           <div class="week-stat total">
-            <span class="week-stat-label">⭐週計</span>
+            <span class="week-stat-label">⭐ Week</span>
             <span class="week-stat-val">${weekTotal}</span>
             <span class="week-stat-label">pt</span>
           </div>
@@ -998,7 +1066,7 @@ function renderTable() {
         s.subs.forEach(sub => {
           const checked = isChecked(row, s.key, sub);
           const ckClass = checked ? (weekend ? 'on-weekend' : 'on') : '';
-          html += `<td class="check-cell">
+          html += `<td class="check-cell col-${s.key}">
             <div class="ck ${ckClass}" onclick="toggle('${row.date}','${s.key}','${sub}')">
               <div class="ck-box">${checked ? '✓' : ''}</div>
             </div>
@@ -1017,7 +1085,7 @@ function renderTable() {
 
   html += `<tr class="add-row">
     <td colspan="${colspan}">
-      <button class="add-date-btn" onclick="openAddModal()">＋ 日付を追加</button>
+      <button class="add-date-btn" onclick="openAddModal()">＋ Add Date</button>
     </td>
   </tr>`;
 
@@ -1150,22 +1218,38 @@ function getNormaPopup() {
   return normaPopupEl;
 }
 
+function toggleNormaHint(e, subKey, sub, label, color) {
+  const popup = getNormaPopup();
+  if (popup.classList.contains('show')) {
+    hideNormaHint();
+  } else {
+    showNormaHint(e, subKey, sub, label, color);
+  }
+  e.stopPropagation();
+}
+
 function showNormaHint(e, subKey, sub, label, color) {
   const text = S.norma && S.norma[subKey + '_' + sub];
   if (!text) return;
   const popup = getNormaPopup();
-  popup.innerHTML = `<div class="norma-popup-title" style="color:${color}">${label} ${sub}</div>${text.replace(/\n/g,'<br>')}`;
-  const x = Math.min(e.clientX + 12, window.innerWidth - 300);
-  const y = Math.min(e.clientY + 12, window.innerHeight - 120);
-  popup.style.left = x + 'px';
-  popup.style.top = y + 'px';
+  popup.innerHTML = `<div class="norma-popup-title" style="color:${color}">📌 ${label} ${sub}</div>${text.replace(/\n/g,'<br>')}`;
+  // position near the element
+  const rect = e.currentTarget ? e.currentTarget.getBoundingClientRect() : null;
+  const x = rect ? Math.min(rect.left, window.innerWidth - 320) : Math.min(e.clientX + 12, window.innerWidth - 320);
+  const y = rect ? rect.bottom + 6 : Math.min(e.clientY + 12, window.innerHeight - 140);
+  popup.style.left = Math.max(8, x) + 'px';
+  popup.style.top = Math.max(8, y) + 'px';
   popup.classList.add('show');
+  e.stopPropagation();
 }
 
 function hideNormaHint() {
   const popup = getNormaPopup();
   popup.classList.remove('show');
 }
+
+// Hide popup when clicking elsewhere
+document.addEventListener('click', hideNormaHint);
 
 // ── MODAL ──
 function openModal(id) { document.getElementById(id).classList.add('open'); }
