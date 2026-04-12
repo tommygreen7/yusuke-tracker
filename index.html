@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yusuke Study Tracker ⭐</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e1628;
+  --surface: #151d35;
+  --surface2: #1c2640;
+  --border: #2a3558;
+  --text: #e8edf8;
+  --muted: #5a6a99;
+  --dim: #2e3d66;
+  --eng: #38bdf8;
+  --mas: #fb923c;
+  --sci: #a78bfa;
+  --gold: #fbbf24;
+  --green: #4ade80;
+  --green-bg: #052010;
+  --weekend: #ff6b9d;
+  --weekend-bg: #2a0f1a;
+  --cell: 44px;
+  --date-w: 120px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh;
+}
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 70% 40% at 15% 5%, rgba(56,189,248,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(167,139,250,.07) 0%, transparent 60%);
+}
+.app { position:relative; z-index:1; display:flex; flex-direction:column; min-height:100vh; }
+
+/* ── HEADER ── */
+.header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
+  position: sticky; top: 0; z-index: 100;
+}
+.header-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.title {
+  font-family: 'Fredoka One', cursive; font-size: 20px;
+  background: linear-gradient(90deg, var(--eng), var(--sci));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.point-box {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #251a00, #3d2c00);
+  border: 1.5px solid var(--gold); border-radius: 12px;
+  padding: 7px 14px;
+  box-shadow: 0 0 18px rgba(251,191,36,.18);
+}
+.point-val {
+  font-family: 'Fredoka One', cursive; font-size: 28px;
+  color: var(--gold); line-height: 1;
+}
+.point-sub { font-size: 11px; font-weight: 700; color: rgba(251,191,36,.55); line-height: 1.3; }
+.header-right { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn {
+  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
+  border: none; border-radius: 9px; cursor: pointer;
+  padding: 8px 14px; transition: all .16s;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.btn-green { background: var(--green); color: #032010; box-shadow: 0 2px 10px rgba(74,222,128,.3); }
+.btn-green:hover { background: #6ee7a0; transform: translateY(-1px); }
+.btn-ghost { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+.btn-ghost:hover { color: var(--text); }
+.btn-red { background: transparent; color: #f87171; border: 1px solid rgba(248,113,113,.25); }
+.btn-red:hover { background: rgba(248,113,113,.08); }
+.btn-norma { background: rgba(251,191,36,.1); color: var(--gold); border: 1px solid rgba(251,191,36,.3); }
+.btn-norma:hover { background: rgba(251,191,36,.18); }
+
+/* ── LEGEND ── */
+.legend {
+  display: flex; align-items: center; gap: 16px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 700; color: var(--muted);
+}
+.legend-dot {
+  width: 10px; height: 10px; border-radius: 3px;
+}
+.legend-sep { color: var(--dim); font-size: 18px; }
+
+/* ── MAIN ── */
+.main { padding: 20px; flex: 1; }
+
+/* ── TABLE ── */
+.table-wrap {
+  border-radius: 12px; border: 1px solid var(--border);
+  overflow-x: auto;
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+}
+table { border-collapse: collapse; min-width: max-content; }
+
+/* Header rows — sticky on vertical scroll */
+thead tr:first-child th {
+  background: var(--surface2);
+  font-size: 12px; font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 10px 6px; text-align: center;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 15;
+}
+thead tr:nth-child(2) th {
+  background: #111929;
+  font-size: 10px; font-weight: 700;
+  color: var(--muted); letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 6px 4px; text-align: center;
+  border-bottom: 2px solid var(--border);
+  border-right: 1px solid var(--border);
+  white-space: nowrap;
+  position: sticky; top: 41px; z-index: 15;
+}
+th.date-col {
+  width: var(--date-w); min-width: var(--date-w);
+  text-align: left !important;
+  padding-left: 14px !important;
+  position: sticky; left: 0; top: 0; z-index: 25;
+  background: var(--surface2) !important;
+}
+th.date-col2 {
+  position: sticky; left: 0; top: 41px; z-index: 25;
+  background: #111929 !important;
+  padding-left: 14px !important;
+  text-align: left !important;
+}
+th.pts-col {
+  width: 64px; min-width: 64px;
+  position: sticky; right: 0; top: 0; z-index: 25;
+  background: var(--surface2) !important;
+  border-left: 2px solid var(--border) !important;
+}
+th.pts-col2 {
+  position: sticky; right: 0; top: 41px; z-index: 25;
+  background: #111929 !important;
+  border-left: 2px solid var(--border) !important;
+}
+th.grp-sep { width: 5px; min-width: 5px; background: var(--bg); border: none; padding: 0; }
+
+/* cells */
+td {
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  height: var(--cell);
+}
+td.date-cell {
+  position: sticky; left: 0; z-index: 10;
+  background: var(--surface);
+  padding: 0 10px 0 14px;
+  min-width: var(--date-w);
+  border-right: 2px solid var(--border) !important;
+  white-space: nowrap;
+}
+.date-inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+}
+.date-label { font-size: 12px; font-weight: 700; line-height: 1.2; }
+.day-badge {
+  font-size: 10px; font-weight: 800;
+  padding: 2px 7px; border-radius: 5px;
+  letter-spacing: 0.4px;
+}
+.badge-weekday { background: rgba(74,222,128,.12); color: var(--green); }
+.badge-sat { background: rgba(255,107,157,.15); color: var(--weekend); }
+.badge-sun { background: rgba(255,107,157,.25); color: var(--weekend); }
+.date-del {
+  opacity: 0; cursor: pointer;
+  background: none; border: none;
+  color: #f87171; font-size: 13px;
+  transition: opacity .15s; padding: 2px;
+  font-family: 'Nunito', sans-serif;
+}
+tr:hover .date-del { opacity: 0.5; }
+.date-del:hover { opacity: 1 !important; }
+
+/* weekend row tint */
+tr.weekend-row td.date-cell { background: #160d17; }
+tr.weekend-row:hover td.date-cell { background: #1c0f1f; }
+tr.weekend-row { background: rgba(255,107,157,.03); }
+tr.weekend-row:hover { background: rgba(255,107,157,.06); }
+
+/* check cell */
+td.check-cell {
+  width: var(--cell); min-width: var(--cell);
+  text-align: center; padding: 0; cursor: pointer;
+}
+.ck {
+  width: 100%; height: var(--cell);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .14s;
+}
+.ck:hover { background: rgba(255,255,255,.05); }
+.ck.on { background: var(--green-bg); }
+.ck.on:hover { background: #072816; }
+.ck.on-weekend { background: var(--weekend-bg); }
+.ck.on-weekend:hover { background: #350d1f; }
+.ck-box {
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; transition: all .17s;
+}
+.ck:hover .ck-box { border-color: var(--muted); }
+.ck.on .ck-box { background: var(--green); border-color: var(--green); color: #032010; }
+.ck.on-weekend .ck-box { background: var(--weekend); border-color: var(--weekend); color: #1a0009; }
+
+/* group separators */
+td.grp-sep { width: 5px; min-width: 5px; background: var(--bg); border: none; padding: 0; }
+
+/* points cell */
+td.pts-cell {
+  position: sticky; right: 0; z-index: 10;
+  background: var(--surface);
+  width: 64px; min-width: 64px;
+  text-align: center; padding: 0 8px;
+  border-left: 2px solid var(--border) !important;
+}
+tr.weekend-row td.pts-cell { background: #160d17; }
+tr:hover td.pts-cell { background: #1c2440; }
+tr.weekend-row:hover td.pts-cell { background: #1c0f1f; }
+.pts-num {
+  font-family: 'Fredoka One', cursive;
+  font-size: 18px; line-height: 1;
+}
+.pts-num.zero { color: var(--dim); }
+.pts-num.pos { color: var(--gold); }
+.pts-num.weekend-pos { color: var(--weekend); }
+.pts-lbl { font-size: 9px; color: var(--muted); font-weight: 700; letter-spacing: 0.4px; }
+
+/* add row */
+tr.add-row td {
+  background: transparent;
+  border-top: 1.5px dashed var(--dim);
+  border-bottom: none; border-right: none;
+}
+.add-date-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px;
+  font-size: 13px; color: var(--dim);
+  cursor: pointer; background: none; border: none;
+  font-family: 'Nunito', sans-serif; font-weight: 700;
+  transition: color .15s; white-space: nowrap;
+}
+.add-date-btn:hover { color: var(--green); }
+
+/* empty */
+.empty-row td {
+  text-align: center; padding: 50px 20px;
+  color: var(--dim); border: none !important;
+  font-size: 14px; font-family: 'Nunito', sans-serif;
+}
+
+
+/* ── WEEK SUMMARY ROW ── */
+tr.week-header td {
+  background: #0a0f1e;
+  border-top: 2px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+}
+.week-summary-cell {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 7px 14px;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+.week-label {
+  font-size: 11px; font-weight: 800;
+  color: var(--muted); letter-spacing: 0.6px;
+  white-space: nowrap; min-width: 60px;
+}
+.week-stat {
+  display: flex; align-items: center; gap: 4px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  white-space: nowrap; margin-right: 6px;
+}
+.week-stat-label { font-size: 10px; font-weight: 700; opacity: .7; }
+.week-stat-val {
+  font-family: 'Fredoka One', cursive;
+  font-size: 16px; line-height: 1;
+}
+.week-stat.weekday { background: rgba(74,222,128,.08); }
+.week-stat.weekday .week-stat-val { color: var(--green); }
+.week-stat.bonus { background: rgba(255,107,157,.08); }
+.week-stat.bonus .week-stat-val { color: var(--weekend); }
+.week-stat.total { background: rgba(251,191,36,.12); }
+.week-stat.total .week-stat-val { color: var(--gold); font-size: 18px; }
+tr.week-first-row td { border-top: 2px solid var(--border); }
+
+
+/* ── NORMA MODAL ── */
+.norma-section { margin-bottom: 18px; }
+.norma-section-label {
+  font-size: 11px; font-weight: 800; letter-spacing: 0.6px;
+  text-transform: uppercase; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.norma-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.norma-row {
+  display: flex; align-items: flex-start; gap: 8px;
+  margin-bottom: 8px;
+}
+.norma-row-label {
+  font-size: 12px; font-weight: 700; color: var(--muted);
+  width: 60px; flex-shrink: 0; padding-top: 8px;
+}
+.norma-row textarea {
+  flex: 1;
+  font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 500;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); border-radius: 8px; padding: 8px 10px;
+  outline: none; resize: vertical; min-height: 52px;
+  line-height: 1.5; transition: border .16s;
+}
+.norma-row textarea:focus { border-color: var(--gold); }
+.norma-row textarea::placeholder { color: var(--dim); font-size: 12px; }
+
+/* norma tooltip on header cell */
+th.has-norma { cursor: pointer; position: relative; }
+th.has-norma::after {
+  content: '📌';
+  position: absolute; top: 2px; right: 2px;
+  font-size: 8px; opacity: 0.7;
+}
+
+/* norma popup */
+.norma-popup {
+  position: fixed; z-index: 300;
+  background: var(--surface);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  padding: 14px 16px;
+  max-width: 280px; min-width: 180px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  font-size: 13px; line-height: 1.6;
+  color: var(--text);
+  pointer-events: none;
+  opacity: 0; transition: opacity .15s;
+}
+.norma-popup.show { opacity: 1; }
+.norma-popup-title {
+  font-size: 11px; font-weight: 800; color: var(--gold);
+  letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px;
+}
+
+
+/* ── CHARACTER EVOLUTION ── */
+.char-box {
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, #0d1f3c, #1a2d50);
+  border: 1.5px solid #2a4a7f;
+  border-radius: 14px; padding: 8px 14px;
+  min-width: 200px;
+  box-shadow: 0 0 20px rgba(56,189,248,.1);
+  position: relative; overflow: hidden;
+}
+.char-box::before {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
+  animation: shimmer 3s infinite;
+}
+@keyframes shimmer {
+  0%{transform:translateX(-100%)} 100%{transform:translateX(100%)}
+}
+.char-ascii {
+  font-family: monospace; font-size: 11px; line-height: 1.3;
+  white-space: pre; color: var(--eng);
+  text-shadow: 0 0 8px rgba(56,189,248,.6);
+  flex-shrink: 0;
+}
+.char-info { flex: 1; min-width: 0; }
+.char-name {
+  font-family: 'Fredoka One', cursive; font-size: 13px;
+  color: var(--text); line-height: 1; margin-bottom: 3px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.char-level {
+  font-size: 10px; font-weight: 800;
+  color: var(--gold); letter-spacing: 0.5px;
+}
+.char-xp-bar {
+  height: 4px; background: #1a2d50;
+  border-radius: 99px; margin-top: 4px; overflow: hidden;
+}
+.char-xp-fill {
+  height: 100%; border-radius: 99px;
+  background: linear-gradient(90deg, var(--eng), var(--green));
+  transition: width .5s cubic-bezier(.4,0,.2,1);
+}
+.char-evolve {
+  position: fixed; inset: 0; z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.85); backdrop-filter: blur(8px);
+  opacity: 0; pointer-events: none; transition: opacity .3s;
+}
+.char-evolve.show { opacity: 1; pointer-events: all; }
+.char-evolve-inner {
+  text-align: center;
+  animation: evolve-pop .5s cubic-bezier(.4,0,.2,1);
+}
+@keyframes evolve-pop {
+  0%{transform:scale(.5);opacity:0} 70%{transform:scale(1.1)} 100%{transform:scale(1);opacity:1}
+}
+.char-evolve-ascii {
+  font-family: monospace; font-size: 16px; line-height: 1.4;
+  white-space: pre; color: var(--gold);
+  text-shadow: 0 0 20px rgba(251,191,36,.8);
+  margin-bottom: 16px;
+}
+.char-evolve-title {
+  font-family: 'Fredoka One', cursive; font-size: 28px;
+  color: var(--gold); margin-bottom: 8px;
+  text-shadow: 0 0 20px rgba(251,191,36,.5);
+}
+.char-evolve-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+
+/* ── MODAL ── */
+.overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.75);
+  display: none; align-items: center; justify-content: center;
+  padding: 20px; backdrop-filter: blur(6px);
+}
+.overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 26px;
+  width: 100%; max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(0,0,0,.55);
+}
+.modal h2 {
+  font-family: 'Fredoka One', cursive; font-size: 20px;
+  margin-bottom: 18px; color: var(--text);
+}
+.field { margin-bottom: 14px; }
+.field label {
+  display: block; font-size: 11px; font-weight: 800;
+  color: var(--muted); letter-spacing: 0.6px;
+  text-transform: uppercase; margin-bottom: 5px;
+}
+.field input, .field select {
+  width: 100%;
+  font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--text); border-radius: 8px; padding: 9px 12px;
+  outline: none; transition: border .16s;
+}
+.field input:focus, .field select:focus { border-color: var(--eng); }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+
+/* ── SETTINGS MODAL ── */
+.pt-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; margin-bottom: 8px;
+}
+.pt-row-label {
+  flex: 1; font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; gap: 6px;
+}
+.pt-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.pt-row input {
+  width: 60px; text-align: center;
+  font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 700;
+  background: var(--bg); border: 1px solid var(--border);
+  color: var(--text); border-radius: 6px; padding: 5px 8px; outline: none;
+}
+.pt-row input:focus { border-color: var(--gold); }
+.pt-row span { font-size: 11px; color: var(--muted); font-weight: 700; }
+.weekend-note {
+  margin-top: 14px; padding: 10px 12px;
+  background: rgba(255,107,157,.08); border: 1px solid rgba(255,107,157,.2);
+  border-radius: 8px; font-size: 12px; color: var(--weekend);
+  font-weight: 600; line-height: 1.5;
+}
+
+/* confetti */
+@keyframes cf {
+  0%   { transform: translate(0,0) rotate(0) scale(1); opacity:1; }
+  100% { transform: translate(var(--cx),var(--cy)) rotate(540deg) scale(0); opacity:0; }
+}
+.cf { position:fixed; width:7px; height:7px; border-radius:2px;
+  pointer-events:none; z-index:9999; animation: cf .65s ease-out forwards; }
+
+@media (max-width:600px) {
+  :root { --cell: 38px; --date-w: 100px; }
+  .main { padding: 12px; }
+  .header { padding: 10px 14px; }
+  .title { font-size: 17px; }
+  .point-val { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="title">⚡ Yusuke Tracker</div>
+    <div id="sync-status" style="font-size:11px;font-weight:700;color:var(--muted)">🔄 読込中...</div>
+    <div class="char-box">
+      <div class="char-ascii" id="char-ascii"></div>
+      <div class="char-info">
+        <div class="char-name" id="char-name">ルーキー</div>
+        <div class="char-level" id="char-level">Lv.1 ・ <span id="total-pts">0</span>XP</div>
+        <div class="char-xp-bar"><div class="char-xp-fill" id="char-xp-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="btn btn-green" onclick="openAddModal()">＋ 日付を追加</button>
+    <button class="btn btn-ghost" onclick="openSettings()">⚙️ ポイント設定</button>
+    <button class="btn btn-norma" onclick="openNormaModal()">🎯 ミッション設定</button>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-dot" style="background:var(--eng)"></div>英語
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background:var(--mas)"></div>マス
+  </div>
+  <div class="legend-item">
+    <div class="legend-dot" style="background:var(--sci)"></div>サイエンス
+  </div>
+  <div class="legend-sep">|</div>
+  <div class="legend-item" style="color:var(--muted)">
+    月〜金：<span style="color:var(--green);margin-left:3px">ミッション</span>
+  </div>
+  <div class="legend-item" style="color:var(--muted)">
+    土・日：<span style="color:var(--weekend);margin-left:3px">ボーナス✨</span>
+  </div>
+</div>
+
+<!-- MAIN TABLE -->
+<div class="main">
+  <div class="table-wrap">
+    <table id="main-table">
+      <thead id="t-head"></thead>
+      <tbody id="t-body"></tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<!-- ADD DATE MODAL -->
+<div class="overlay" id="modal-add">
+  <div class="modal">
+    <h2>📅 30日分を追加</h2>
+    <div class="field">
+      <label>開始日</label>
+      <input type="date" id="inp-date">
+    </div>
+    <div class="field">
+      <label>追加する日数</label>
+      <select id="inp-days">
+        <option value="7">7日間（1週間）</option>
+        <option value="14">14日間（2週間）</option>
+        <option value="30" selected>30日間（1ヶ月）</option>
+        <option value="60">60日間（2ヶ月）</option>
+        <option value="90">90日間（3ヶ月）</option>
+      </select>
+    </div>
+    <div id="add-preview" style="font-size:12px;color:var(--muted);margin-top:2px;padding:8px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add')">キャンセル</button>
+      <button class="btn btn-green" onclick="addDateRange()">追加</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- NORMA MODAL -->
+<div class="overlay" id="modal-norma">
+  <div class="modal" style="max-width:520px">
+    <h2>🎯 ミッション設定</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.6">
+      各サブ科目のミッション内容を自由に記入してください。
+    </p>
+    <div id="norma-list"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-norma')">キャンセル</button>
+      <button class="btn btn-green" onclick="saveNorma()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="overlay" id="modal-settings">
+  <div class="modal">
+    <h2>⚙️ ポイント設定</h2>
+    <div id="pt-rows"></div>
+    <div class="weekend-note">
+      🎉 土・日のチェックはボーナス扱い。<br>ポイントは同じ設定値が加算されます。
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-settings')">キャンセル</button>
+      <button class="btn btn-green" onclick="saveSettings()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──
+const SUBJECTS = [
+  { key: 'eng', label: '英語', subs: ['A','B','C'], color: '#38bdf8' },
+  { key: 'mas', label: 'マス', subs: ['A','B','C'], color: '#fb923c' },
+  { key: 'sci', label: 'サイエンス', subs: ['A','B','C'], color: '#a78bfa' },
+  { key: 'jpn', label: '日本語', subs: ['A','B','C'], color: '#34d399' },
+];
+
+const DAYS_JP = ['日','月','火','水','木','金','土'];
+const DAYS_EN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+// ── STATE ──
+function defaultState() {
+  const points = {};
+  SUBJECTS.forEach(s => s.subs.forEach(sub => {
+    points[s.key + '_' + sub] = (s.key === 'sci') ? 2 : 1;
+  }));
+  return { points, dates: [] };
+}
+function getPoint(subKey, sub) {
+  return S.points[subKey + '_' + sub] ?? 1;
+}
+
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbywWGDr91AO628mvrdxlIOfxmHHnoI9KlkBgVJet4GUZWuK4XPVo9WuL42-zOlChEADYA/exec';
+let S = defaultState();
+
+// ── SYNC STATUS UI ──
+function setSyncStatus(status) {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  if (status === 'saving')  { el.textContent = '💾 保存中...'; el.style.color = 'var(--muted)'; }
+  if (status === 'saved')   { el.textContent = '✅ 保存済み'; el.style.color = 'var(--green)'; }
+  if (status === 'error')   { el.textContent = '⚠️ 保存失敗'; el.style.color = '#f87171'; }
+  if (status === 'loading') { el.textContent = '🔄 読込中...'; el.style.color = 'var(--muted)'; }
+}
+
+// ── SAVE to GAS ──
+let saveTimer = null;
+function save() {
+  // localStorageにも保存（オフライン時のバックアップ）
+  localStorage.setItem('yusuke-tracker-v1', JSON.stringify(S));
+  // GASへ送信（300ms debounce）
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    setSyncStatus('saving');
+    fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify(S),
+      headers: { 'Content-Type': 'text/plain' }
+    })
+    .then(r => r.text())
+    .then(() => setSyncStatus('saved'))
+    .catch(() => setSyncStatus('error'));
+  }, 300);
+}
+
+// ── LOAD from GAS ──
+async function loadFromGAS() {
+  setSyncStatus('loading');
+  try {
+    const r = await fetch(GAS_URL + '?t=' + Date.now());
+    const text = await r.text();
+    if (text && text !== '{}' && text.trim() !== '') {
+      const remote = JSON.parse(text);
+      if (remote && remote.dates) {
+        S = remote;
+        localStorage.setItem('yusuke-tracker-v1', JSON.stringify(S));
+        setSyncStatus('saved');
+        return true;
+      }
+    }
+  } catch(e) {}
+  // GASから取得できなければlocalStorageから
+  try {
+    const local = JSON.parse(localStorage.getItem('yusuke-tracker-v1') || 'null');
+    if (local) S = local;
+  } catch(e) {}
+  setSyncStatus('saved');
+  return false;
+}
+
+// ── HELPERS ──
+function isWeekend(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const dow = d.getDay();
+  return dow === 0 || dow === 6;
+}
+function isSunday(dateStr) {
+  return new Date(dateStr + 'T00:00:00').getDay() === 0;
+}
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const m = d.getMonth() + 1;
+  const day = d.getDate();
+  const dow = DAYS_JP[d.getDay()];
+  return { short: `${m}/${day}`, dow };
+}
+
+function ckKey(subKey, sub) { return `${subKey}_${sub}`; }
+
+function isChecked(row, subKey, sub) {
+  return !!(row.checks && row.checks[ckKey(subKey, sub)]);
+}
+
+function rowPoints(row) {
+  let pts = 0;
+  SUBJECTS.forEach(s => {
+    s.subs.forEach(sub => {
+      if (isChecked(row, s.key, sub)) pts += getPoint(s.key, sub);
+    });
+  });
+  return pts;
+}
+
+function totalPoints() {
+  return S.dates.reduce((acc, row) => acc + rowPoints(row), 0);
+}
+
+// ── TOGGLE ──
+function toggle(dateStr, subKey, sub) {
+  const row = S.dates.find(r => r.date === dateStr);
+  if (!row) return;
+  if (!row.checks) row.checks = {};
+  const k = ckKey(subKey, sub);
+  row.checks[k] = !row.checks[k];
+  save();
+  renderTable();
+  updateCharacter();
+  if (row.checks[k]) spawnConfetti(isWeekend(dateStr));
+}
+
+// ── ADD DATE RANGE ──
+function toDateStr(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function updateAddPreview() {
+  const val = document.getElementById('inp-date').value;
+  const days = parseInt(document.getElementById('inp-days').value);
+  if (!val) { document.getElementById('add-preview').textContent = ''; return; }
+  const start = new Date(val + 'T00:00:00');
+  const end = new Date(start); end.setDate(end.getDate() + days - 1);
+  const endStr = `${end.getMonth()+1}/${end.getDate()}`;
+  const startStr = `${start.getMonth()+1}/${start.getDate()}`;
+  // count new dates
+  let newCount = 0;
+  for (let i = 0; i < days; i++) {
+    const d = new Date(start); d.setDate(d.getDate() + i);
+    if (!S.dates.find(r => r.date === toDateStr(d))) newCount++;
+  }
+  document.getElementById('add-preview').textContent =
+    `📆 ${startStr} 〜 ${endStr}（${days}日間・新規追加 ${newCount}日）`;
+}
+
+function openAddModal() {
+  const today = new Date();
+  document.getElementById('inp-date').value = toDateStr(today);
+  document.getElementById('inp-days').value = '30';
+  updateAddPreview();
+  openModal('modal-add');
+}
+
+function addDateRange() {
+  const val = document.getElementById('inp-date').value;
+  const days = parseInt(document.getElementById('inp-days').value);
+  if (!val) return;
+  const start = new Date(val + 'T00:00:00');
+  let added = 0;
+  for (let i = 0; i < days; i++) {
+    const d = new Date(start); d.setDate(d.getDate() + i);
+    const ds = toDateStr(d);
+    if (!S.dates.find(r => r.date === ds)) {
+      S.dates.push({ date: ds, checks: {} });
+      added++;
+    }
+  }
+  S.dates.sort((a,b) => a.date.localeCompare(b.date));
+  save();
+  closeModal('modal-add');
+  renderTable();
+  updateCharacter();
+}
+
+function deleteDate(dateStr) {
+  if (!confirm(`${dateStr} の記録を削除しますか？`)) return;
+  S.dates = S.dates.filter(r => r.date !== dateStr);
+  save();
+  renderTable();
+  updateCharacter();
+}
+
+// ── SETTINGS ──
+function openSettings() {
+  const wrap = document.getElementById('pt-rows');
+  wrap.innerHTML = '';
+  SUBJECTS.forEach(s => {
+    // section label
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'font-size:11px;font-weight:800;color:' + s.color + ';letter-spacing:.5px;margin:10px 0 6px;text-transform:uppercase';
+    lbl.textContent = s.label;
+    wrap.appendChild(lbl);
+    s.subs.forEach(sub => {
+      const div = document.createElement('div');
+      div.className = 'pt-row';
+      div.innerHTML = `
+        <div class="pt-row-label">
+          <div class="pt-dot" style="background:${s.color}"></div>
+          ${s.label} ${sub}
+        </div>
+        <input type="number" min="0" max="99" value="${getPoint(s.key, sub)}" id="pt-inp-${s.key}_${sub}">
+        <span>pt</span>
+      `;
+      wrap.appendChild(div);
+    });
+  });
+  openModal('modal-settings');
+}
+
+function saveSettings() {
+  SUBJECTS.forEach(s => {
+    s.subs.forEach(sub => {
+      const el = document.getElementById('pt-inp-' + s.key + '_' + sub);
+      const val = parseInt(el.value);
+      S.points[s.key + '_' + sub] = Math.max(0, Math.min(99, isNaN(val) ? 1 : val));
+    });
+  });
+  save();
+  closeModal('modal-settings');
+  renderTable();
+  updateCharacter();
+}
+
+// ── RENDER HEADER ──
+function updateHeader() { updateCharacter(); }
+
+// ── RENDER TABLE ──
+function renderTable() {
+  const thead = document.getElementById('t-head');
+  const tbody = document.getElementById('t-body');
+
+  // ── HEADER ROW 1: group labels ──
+  let h1 = '<tr>';
+  h1 += `<th class="date-col" rowspan="2">日付</th>`;
+  SUBJECTS.forEach((s, si) => {
+    if (si > 0) h1 += `<th class="grp-sep" rowspan="2" style="background:var(--bg)"></th>`;
+    const ptVals = s.subs.map(sub => getPoint(s.key, sub));
+    const ptMin = Math.min(...ptVals), ptMax = Math.max(...ptVals);
+    const ptLabel = ptMin === ptMax ? ptMin + 'pt' : ptMin + '-' + ptMax + 'pt';
+    h1 += `<th colspan="${s.subs.length}" style="color:${s.color};border-bottom:2px solid ${s.color}33">
+      ${s.label}
+      <span style="font-size:10px;opacity:.6;margin-left:4px">${ptLabel}</span>
+    </th>`;
+  });
+  h1 += `<th class="pts-col" rowspan="2" style="color:var(--gold)">⭐<br><span style="font-size:9px;font-weight:700;color:var(--muted)">PT</span></th>`;
+  h1 += '</tr>';
+
+  // ── HEADER ROW 2: A/B/C labels (no grp-sep — covered by rowspan=2 in h1) ──
+  let h2 = '<tr>';
+  SUBJECTS.forEach((s, si) => {
+    s.subs.forEach(sub => {
+      const pt = getPoint(s.key, sub);
+      const hasNorma = S.norma && S.norma[s.key + '_' + sub];
+      const normaClass = hasNorma ? ' has-norma' : '';
+      h2 += `<th class="${normaClass}" style="color:${s.color};opacity:.8;cursor:${hasNorma?'pointer':'default'}"
+        onmouseenter="showNormaHint(event,'${s.key}','${sub}','${s.label}','${s.color}')"
+        onmouseleave="hideNormaHint()"
+      >${sub}<br><span style="font-size:9px;opacity:.6">${pt}pt</span></th>`;
+    });
+  });
+  h2 += '</tr>';
+  thead.innerHTML = h1 + h2;
+
+  // ── BODY ──
+  if (S.dates.length === 0) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="20">
+      ＋ 日付を追加して記録をスタートしよう！
+    </td></tr>`;
+    return;
+  }
+
+  // Group dates by ISO week (Mon-Sun)
+  function getWeekKey(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    const dow = d.getDay(); // 0=Sun
+    const monday = new Date(d);
+    monday.setDate(d.getDate() - (dow === 0 ? 6 : dow - 1));
+    return monday.toISOString().slice(0, 10);
+  }
+
+  // Build ordered week groups
+  const weekMap = {};
+  const weekOrder = [];
+  S.dates.forEach(row => {
+    const wk = getWeekKey(row.date);
+    if (!weekMap[wk]) { weekMap[wk] = []; weekOrder.push(wk); }
+    weekMap[wk].push(row);
+  });
+
+  // date(1) + subs(9) + grp-sep(2) + pts(1) = 13
+  const colspan = 1 + SUBJECTS.reduce((a,s)=>a+s.subs.length,0) + (SUBJECTS.length-1) + 1;
+  let html = '';
+
+  weekOrder.forEach((wk, wi) => {
+    const rows = weekMap[wk];
+    const wkStart = new Date(wk + 'T00:00:00');
+    const wkEnd = new Date(wk + 'T00:00:00'); wkEnd.setDate(wkEnd.getDate() + 6);
+    const wkLabel = `Week ${wi+1}`;
+
+    // Calc week stats
+    let weekdayPts = 0, bonusPts = 0;
+    rows.forEach(row => {
+      const pts = rowPoints(row);
+      if (isWeekend(row.date)) bonusPts += pts;
+      else weekdayPts += pts;
+    });
+    const weekTotal = weekdayPts + bonusPts;
+
+    // Week summary header row
+    html += `<tr class="week-header">
+      <td colspan="${colspan}">
+        <div class="week-summary-cell">
+          <div class="week-label">${wkLabel}</div>
+          <div class="week-stat weekday">
+            <span class="week-stat-label">月〜金</span>
+            <span class="week-stat-val">${weekdayPts}</span>
+            <span class="week-stat-label">pt</span>
+          </div>
+          <div class="week-stat bonus">
+            <span class="week-stat-label">土日</span>
+            <span class="week-stat-val">${bonusPts}</span>
+            <span class="week-stat-label">pt</span>
+          </div>
+          <div class="week-stat total">
+            <span class="week-stat-label">⭐週計</span>
+            <span class="week-stat-val">${weekTotal}</span>
+            <span class="week-stat-label">pt</span>
+          </div>
+        </div>
+      </td>
+    </tr>`;
+
+    // Date rows for this week
+    rows.forEach((row, ri) => {
+      const { short, dow } = formatDate(row.date);
+      const weekend = isWeekend(row.date);
+      const sun = isSunday(row.date);
+      const pts = rowPoints(row);
+      const trClass = (weekend ? 'weekend-row' : '') + (ri === 0 ? ' week-first-row' : '');
+      const badgeClass = weekend ? (sun ? 'badge-sun' : 'badge-sat') : 'badge-weekday';
+
+      html += `<tr class="${trClass}">`;
+      html += `<td class="date-cell">
+        <div class="date-inner">
+          <div>
+            <div class="date-label">${short} <span class="day-badge ${badgeClass}">${dow}</span></div>
+            ${weekend ? '<div style="font-size:10px;color:var(--weekend);font-weight:700;margin-top:1px">BONUS ✨</div>' : ''}
+          </div>
+          <button class="date-del" onclick="deleteDate('${row.date}')" title="削除">✕</button>
+        </div>
+      </td>`;
+
+      SUBJECTS.forEach((s, si) => {
+        if (si > 0) html += `<td class="grp-sep"></td>`;
+        s.subs.forEach(sub => {
+          const checked = isChecked(row, s.key, sub);
+          const ckClass = checked ? (weekend ? 'on-weekend' : 'on') : '';
+          html += `<td class="check-cell">
+            <div class="ck ${ckClass}" onclick="toggle('${row.date}','${s.key}','${sub}')">
+              <div class="ck-box">${checked ? '✓' : ''}</div>
+            </div>
+          </td>`;
+        });
+      });
+
+      const ptClass = pts === 0 ? 'zero' : (weekend ? 'weekend-pos' : 'pos');
+      html += `<td class="pts-cell">
+        <div class="pts-num ${ptClass}">${pts}</div>
+        <div class="pts-lbl">pt</div>
+      </td>`;
+      html += '</tr>';
+    });
+  });
+
+  html += `<tr class="add-row">
+    <td colspan="${colspan}">
+      <button class="add-date-btn" onclick="openAddModal()">＋ 日付を追加</button>
+    </td>
+  </tr>`;
+
+  tbody.innerHTML = html;
+}
+
+
+
+// ── CHARACTER EVOLUTION ──
+const CHAR_LEVELS = [
+  { min:0,   lv:1,  name:'ルーキー',     ascii:'  o  \n /|\\\n / \\' },
+  { min:10,  lv:2,  name:'ジュニア選手', ascii:' \\o/ \n  |  \n / \\' },
+  { min:30,  lv:3,  name:'レギュラー',   ascii:' \\o/ \n  |  \n _|_' },
+  { min:60,  lv:4,  name:'キャプテン',   ascii:' \\o/ \n \\|/ \n _|_' },
+  { min:100, lv:5,  name:'エース',       ascii:'\\\\o//\n  Y  \n _|_' },
+  { min:150, lv:6,  name:'スター選手',   ascii:'★o★ \n /Y\\ \n/ | \\' },
+  { min:220, lv:7,  name:'MVP',          ascii:'🏆o🏆\n /Y\\ \n/ | \\' },
+  { min:300, lv:8,  name:'チャンピオン', ascii:'👑o👑\n /Y\\ \n /_\\ ' },
+  { min:400, lv:9,  name:'レジェンド',   ascii:'⚡o⚡\n /Y\\ \n /_\\ ' },
+  { min:500, lv:10, name:'GOAT 🐐',      ascii:'🌟o🌟\n /Y\\ \n /_\\ ' },
+];
+
+function getCurrentLevel(pts) {
+  let cur = CHAR_LEVELS[0];
+  for (const lv of CHAR_LEVELS) { if (pts >= lv.min) cur = lv; else break; }
+  return cur;
+}
+
+function getNextLevel(pts) {
+  for (const lv of CHAR_LEVELS) { if (lv.min > pts) return lv; }
+  return null;
+}
+
+let _lastLevel = 1;
+
+function updateCharacter() {
+  const pts = totalPoints();
+  const cur = getCurrentLevel(pts);
+  const next = getNextLevel(pts);
+
+  document.getElementById('char-ascii').textContent = cur.ascii;
+  document.getElementById('char-name').textContent = cur.name;
+  document.getElementById('total-pts').textContent = pts;
+  document.getElementById('char-level').innerHTML =
+    `Lv.${cur.lv} ・ <span id="total-pts">${pts}</span>XP`;
+
+  // XP bar
+  const barPct = next
+    ? Math.round((pts - cur.min) / (next.min - cur.min) * 100)
+    : 100;
+  document.getElementById('char-xp-fill').style.width = barPct + '%';
+
+  // Level up animation
+  if (cur.lv > _lastLevel) {
+    showEvolve(cur);
+  }
+  _lastLevel = cur.lv;
+}
+
+function showEvolve(lv) {
+  let el = document.getElementById('char-evolve-overlay');
+  if (!el) {
+    el = document.createElement('div');
+    el.className = 'char-evolve';
+    el.id = 'char-evolve-overlay';
+    el.innerHTML = `
+      <div class="char-evolve-inner">
+        <div class="char-evolve-ascii" id="evolve-ascii"></div>
+        <div class="char-evolve-title" id="evolve-title"></div>
+        <div class="char-evolve-sub" id="evolve-sub"></div>
+        <button class="btn btn-green" onclick="document.getElementById('char-evolve-overlay').classList.remove('show')" style="font-size:16px;padding:12px 32px">
+          やったー！🎉
+        </button>
+      </div>`;
+    document.body.appendChild(el);
+  }
+  document.getElementById('evolve-ascii').textContent = lv.ascii;
+  document.getElementById('evolve-title').textContent = `レベルアップ！ Lv.${lv.lv}`;
+  document.getElementById('evolve-sub').textContent = `「${lv.name}」に進化した！`;
+  el.classList.add('show');
+}
+
+// ── NORMA ──
+function openNormaModal() {
+  const list = document.getElementById('norma-list');
+  list.innerHTML = '';
+  SUBJECTS.forEach(s => {
+    const sec = document.createElement('div');
+    sec.className = 'norma-section';
+    let html = `<div class="norma-section-label">
+      <div class="norma-dot" style="background:${s.color}"></div>
+      <span style="color:${s.color}">${s.label}</span>
+    </div>`;
+    s.subs.forEach(sub => {
+      const val = (S.norma && S.norma[s.key + '_' + sub]) || '';
+      html += `<div class="norma-row">
+        <div class="norma-row-label">${s.label} ${sub}</div>
+        <textarea id="mission-inp-${s.key}_${sub}"
+          placeholder="例：英単語10個 / 問題集p.12〜15 / 読書20分"
+        >${val}</textarea>
+      </div>`;
+    });
+    sec.innerHTML = html;
+    list.appendChild(sec);
+  });
+  openModal('modal-norma');
+}
+
+function saveNorma() {
+  if (!S.norma) S.norma = {};
+  SUBJECTS.forEach(s => {
+    s.subs.forEach(sub => {
+      const el = document.getElementById('mission-inp-' + s.key + '_' + sub);
+      S.norma[s.key + '_' + sub] = el.value.trim();
+    });
+  });
+  save();
+  closeModal('modal-norma');
+  renderTable();
+}
+
+// Norma popup
+let normaPopupEl = null;
+function getNormaPopup() {
+  if (!normaPopupEl) {
+    normaPopupEl = document.createElement('div');
+    normaPopupEl.className = 'norma-popup';
+    document.body.appendChild(normaPopupEl);
+  }
+  return normaPopupEl;
+}
+
+function showNormaHint(e, subKey, sub, label, color) {
+  const text = S.norma && S.norma[subKey + '_' + sub];
+  if (!text) return;
+  const popup = getNormaPopup();
+  popup.innerHTML = `<div class="norma-popup-title" style="color:${color}">${label} ${sub}</div>${text.replace(/\n/g,'<br>')}`;
+  const x = Math.min(e.clientX + 12, window.innerWidth - 300);
+  const y = Math.min(e.clientY + 12, window.innerHeight - 120);
+  popup.style.left = x + 'px';
+  popup.style.top = y + 'px';
+  popup.classList.add('show');
+}
+
+function hideNormaHint() {
+  const popup = getNormaPopup();
+  popup.classList.remove('show');
+}
+
+// ── MODAL ──
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.querySelectorAll('.overlay.open').forEach(el => el.classList.remove('open'));
+  if (e.key === 'Enter' && document.getElementById('modal-add').classList.contains('open')) addDateRange();
+});
+
+// ── RESET ──
+function confirmReset() {
+  if (!confirm('チェックデータをすべてリセットしますか？')) return;
+  S.dates = [];
+  save();
+  renderTable();
+  updateCharacter();
+}
+
+// ── CONFETTI ──
+function spawnConfetti(weekend) {
+  const colors = weekend
+    ? ['#ff6b9d','#ff8fab','#ffb3c6','#fbbf24','#f472b6']
+    : ['#4ade80','#38bdf8','#fbbf24','#a78bfa','#fb923c'];
+  for (let i = 0; i < 12; i++) {
+    const el = document.createElement('div');
+    el.className = 'cf';
+    const angle = Math.random() * Math.PI * 2;
+    const dist = 40 + Math.random() * 90;
+    el.style.setProperty('--cx', Math.cos(angle)*dist + 'px');
+    el.style.setProperty('--cy', Math.sin(angle)*dist + 'px');
+    el.style.background = colors[i % colors.length];
+    el.style.left = (window.innerWidth/2 + (Math.random()-0.5)*80) + 'px';
+    el.style.top = (window.innerHeight/2 + (Math.random()-0.5)*40) + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 750);
+  }
+}
+
+// ── INIT: GASからロードしてからレンダリング ──
+(async function init() {
+  await loadFromGAS();
+  renderTable();
+  _lastLevel = getCurrentLevel(totalPoints()).lv;
+  updateCharacter();
+})();
+document.getElementById('inp-date').addEventListener('change', updateAddPreview);
+document.getElementById('inp-days').addEventListener('change', updateAddPreview);
+</script>
+</body>
+</html>
