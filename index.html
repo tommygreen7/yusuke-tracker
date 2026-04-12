@@ -721,10 +721,10 @@ function save() {
     setSyncStatus('saving');
     fetch(GAS_URL, {
       method: 'POST',
+      mode: 'no-cors',
       body: JSON.stringify(S),
       headers: { 'Content-Type': 'text/plain' }
     })
-    .then(r => r.text())
     .then(() => setSyncStatus('saved'))
     .catch(() => setSyncStatus('error'));
   }, 300);
@@ -734,7 +734,11 @@ function save() {
 async function loadFromGAS() {
   setSyncStatus('loading');
   try {
-    const r = await fetch(GAS_URL + '?t=' + Date.now());
+    const r = await fetch(GAS_URL + '?t=' + Date.now(), {
+      method: 'GET',
+      mode: 'cors',
+      redirect: 'follow'
+    });
     const text = await r.text();
     if (text && text !== '{}' && text.trim() !== '') {
       const remote = JSON.parse(text);
